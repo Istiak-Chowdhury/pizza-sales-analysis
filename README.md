@@ -10,11 +10,11 @@ describe order_details;
 Output:
 | Field      | Type         | Null | Key | Default | Extra |
 |------------|--------------|------|-----|---------|-------|
-| order_id   | int          | NO   | PRI | NULL    |       |
+| order_id   | int          | YES  | PRI | NULL    |       |
 | customer   | varchar(255) | YES  |     | NULL    |       |
 | date       | date         | YES  |     | NULL    |       |
-| order_id   | int          | NO   | PRI | NULL    |       |
-| pizza_id   | int          | NO   | PRI | NULL    |       |
+| order_id   | int          | Yes  | PRI | NULL    |       |
+| pizza_id   | int          | YES  | PRI | NULL    |       |
 | quantity   | int          | YES  |     | NULL    |       |
 
 ## CS2: Total Revenue from All Orders
@@ -34,7 +34,7 @@ FROM CTE;
 Output:
 | TOTAL_REVENUE |
 |---------------|
-| 15982.50      |
+| 817860.05     |
 
 ## CS3: Revenue by Pizza Size
 
@@ -49,11 +49,13 @@ GROUP BY 1
 ORDER BY 2 DESC;
 ```
 Output:
-| SIZE   | TOTAL_REVENUE |
+| SIZE   | TOTAL_REVENUE |   
 |--------|---------------|
-| Large  | 9200          |
-| Medium | 5200          |
-| Small  | 1582          |
+| L      | 375319        |
+| M      | 249382        |
+| S      | 178076        |
+| XL     | 14076         |
+| XXL    | 1007          |
 
 ## CS4: Count of Orders by Day
 
@@ -72,9 +74,11 @@ FROM CTE;
 Output:
 | DATE       | DAILY_SALES | RN |
 |------------|-------------|----|
-| 2023-07-15 | 25          | 1  |
-| 2023-07-16 | 20          | 2  |
-| 2023-07-17 | 15          | 3  |
+| 2015-11-27 | 115         | 1  |
+| 2015-11-26 | 113         | 2  |
+| 2015-10-15 | 107         | 3  |
+| 2015-04-04 | 105         | 4  |
+| 2015-05-15 | 94          | 5  |
 
 ## CS5: Count of Orders in December
 
@@ -93,7 +97,7 @@ FROM
 Output:
 | TOTAL_ORDERS_IN_DECEMBER |
 |--------------------------|
-| 320                      |
+| 1607                     |
 
 ## CS6: Monthly Pizza Sales
 
@@ -115,9 +119,18 @@ ORDER BY 1, 2 DESC;
 Output:
 | MONTH | TOTAL_ORDERS |
 |-------|--------------|
-| 1     | 50           |
-| 2     | 45           |
-| 3     | 40           |
+| 1     | 1799         |
+| 2     | 1853         |
+| 3     | 1773         |
+| 4     | 1935         |
+| 5     | 1841         |
+| 6     | 1661         |
+| 7     | 1646         |
+| 8     | 1792         |
+| 9     | 1846         |
+| 10    | 1680         |
+| 11    | 1685         |
+| 12    | 1840         |
 
 ## CS7: Orders by Time of Day
 
@@ -142,6 +155,6 @@ ORDER BY 2 DESC;
 Output:
 | TIME_OF_THE_DAY | TOTAL_ORDERS |
 |-----------------|--------------|
-| EVENING         | 70           |
-| AFTERNOON       | 50           |
-| MORNING         | 30           |
+| EVENING         | 12171        |
+| AFTERNOON       | 7939         |
+| MORNING         | 1240         |
