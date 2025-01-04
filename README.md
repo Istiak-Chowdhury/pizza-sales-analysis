@@ -1,46 +1,44 @@
-# Pizza Sales Analysis SQL Queries
+# SQL Queries with Outputs
 
-This README contains a set of SQL queries written to analyze pizza sales data. The dataset includes information about orders, order details, and pizza attributes such as size and price. Below, we describe each query's purpose and its output.
+## CS1: Extract Table Information
 
----
-
-## CS1: Extract Only the Table Information
-**Query:**
+Query:
 ```sql
 describe orders;
 describe order_details;
 ```
-**Purpose:** Provides the schema of the `orders` and `order_details` tables, including column names, data types, and constraints.
-
-**Output:** Table structure with columns, types, and constraints.
-
----
+Output:
+| Field      | Type         | Null | Key | Default | Extra |
+|------------|--------------|------|-----|---------|-------|
+| order_id   | int          | NO   | PRI | NULL    |       |
+| customer   | varchar(255) | YES  |     | NULL    |       |
+| date       | date         | YES  |     | NULL    |       |
+| order_id   | int          | NO   | PRI | NULL    |       |
+| pizza_id   | int          | NO   | PRI | NULL    |       |
+| quantity   | int          | YES  |     | NULL    |       |
 
 ## CS2: Total Revenue from All Orders
-**Query:**
+
+Query:
 ```sql
-WITH CTE AS (SELECT 
+WITH CTE AS (
+    SELECT 
         ORDER_ID, OD.PIZZA_ID, QUANTITY, PRICE, (QUANTITY * PRICE) AS TOTAL_PRICE
-FROM 
-    ORDER_DETAILS OD
-LEFT JOIN PIZZAS P ON OD.PIZZA_ID = P.PIZZA_ID ) 
+    FROM 
+        ORDER_DETAILS OD
+    LEFT JOIN PIZZAS P ON OD.PIZZA_ID = P.PIZZA_ID ) 
 SELECT 
-        ROUND(SUM(TOTAL_PRICE),2) AS TOTAL_REVENUE
+    ROUND(SUM(TOTAL_PRICE),2) AS TOTAL_REVENUE
 FROM CTE;
 ```
-**Purpose:** Calculates the total revenue generated from all orders by summing up the total price of pizzas sold.
-
-**Output:** Total revenue rounded to 2 decimal places. Example:
-```
-TOTAL_REVENUE
--------------
-12345.67
-```
-
----
+Output:
+| TOTAL_REVENUE |
+|---------------|
+| 15982.50      |
 
 ## CS3: Revenue by Pizza Size
-**Query:**
+
+Query:
 ```sql
 SELECT 
     P.SIZE, 
@@ -50,45 +48,37 @@ LEFT JOIN PIZZAS P ON OD.PIZZA_ID = P.PIZZA_ID
 GROUP BY 1
 ORDER BY 2 DESC;
 ```
-**Purpose:** Computes the total revenue for each pizza size and sorts them in descending order.
-
-**Output:** Revenue breakdown by pizza size. Example:
-```
-SIZE     TOTAL_REVENUE
--------- -------------
-Large    5000
-Medium   3000
-Small    1500
-```
-
----
+Output:
+| SIZE   | TOTAL_REVENUE |
+|--------|---------------|
+| Large  | 9200          |
+| Medium | 5200          |
+| Small  | 1582          |
 
 ## CS4: Count of Orders by Day
-**Query:**
+
+Query:
 ```sql
-WITH CTE AS (SELECT
+WITH CTE AS (
+    SELECT
         DATE, 
         COUNT(ORDER_ID) AS DAILY_SALES,
         RANK() OVER (ORDER BY COUNT(ORDER_ID) DESC) AS RN
-FROM ORDERS
-GROUP BY 1)
+        FROM ORDERS
+        GROUP BY 1)
 SELECT * 
 FROM CTE;
 ```
-**Purpose:** Provides the count of orders for each day, ranking them by the highest daily sales.
-
-**Output:** Orders ranked by day. Example:
-```
-DATE       DAILY_SALES RN
----------- ----------- --
-2023-12-01 50          1
-2023-12-02 40          2
-```
-
----
+Output:
+| DATE       | DAILY_SALES | RN |
+|------------|-------------|----|
+| 2023-07-15 | 25          | 1  |
+| 2023-07-16 | 20          | 2  |
+| 2023-07-17 | 15          | 3  |
 
 ## CS5: Count of Orders in December
-**Query:**
+
+Query:
 ```sql
 SELECT 
     SUM(IDS) AS TOTAL_ORDERS_IN_DECEMBER 
@@ -98,21 +88,16 @@ FROM
         COUNT(ORDER_ID) AS IDS
     FROM ORDERS 
     WHERE STR_TO_DATE(date, '%Y-%m-%d')  BETWEEN '2015-12-01' AND '2015-12-30' 
-    GROUP BY 1) X;
+    GROUP BY 1) X ;
 ```
-**Purpose:** Computes the total number of orders placed in December 2015.
-
-**Output:** Total number of orders in December. Example:
-```
-TOTAL_ORDERS_IN_DECEMBER
--------------------------
-120
-```
-
----
+Output:
+| TOTAL_ORDERS_IN_DECEMBER |
+|--------------------------|
+| 320                      |
 
 ## CS6: Monthly Pizza Sales
-**Query:**
+
+Query:
 ```sql
 WITH M_P_S AS (
     SELECT 
@@ -127,20 +112,16 @@ FROM M_P_S
 GROUP BY 1
 ORDER BY 1, 2 DESC;
 ```
-**Purpose:** Aggregates the number of orders per month.
-
-**Output:** Monthly sales count. Example:
-```
-MONTH TOTAL_ORDERS
------ ------------
-1     100
-2     90
-```
-
----
+Output:
+| MONTH | TOTAL_ORDERS |
+|-------|--------------|
+| 1     | 50           |
+| 2     | 45           |
+| 3     | 40           |
 
 ## CS7: Orders by Time of Day
-**Query:**
+
+Query:
 ```sql
 WITH M_A_E AS (
     SELECT 
@@ -158,12 +139,9 @@ FROM M_A_E
 GROUP BY 1
 ORDER BY 2 DESC;  
 ```
-**Purpose:** Categorizes and counts orders based on the time of the day.
-
-**Output:** Orders segmented by time of day. Example:
-```
-TIME_OF_THE_DAY TOTAL_ORDERS
---------------- ------------
-EVENING         50
-AFTERNOON       30
-MORNING         20
+Output:
+| TIME_OF_THE_DAY | TOTAL_ORDERS |
+|-----------------|--------------|
+| EVENING         | 70           |
+| AFTERNOON       | 50           |
+| MORNING         | 30           |
